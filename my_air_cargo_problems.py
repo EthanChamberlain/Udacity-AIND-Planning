@@ -34,13 +34,14 @@ class AirCargoProblem(Problem):
         self.planes = planes
         self.airports = airports
         self.actions_list = self.get_actions()
-       
+
     def get_actions(self):
         """
-        This method creates concrete actions (no variables) for all actions in the problem
-        domain action schema and turns them into complete Action objects as defined in the
-        aimacode.planning module. It is computationally expensive to call this method directly;
-        however, it is called in the constructor and the results cached in the `actions_list` property.
+        This method creates concrete actions (no variables) for all actions in
+        the problem domain action schema and turns them into complete Action
+        objects as defined in the aimacode.planning module. It is computationally
+        expensive to call this method directly; however, it is called in the
+        constructor and the results cached in the `actions_list` property.
 
         Returns:
         ----------
@@ -48,10 +49,14 @@ class AirCargoProblem(Problem):
             list of Action objects
         """
 
-        # TODO create concrete Action objects based on the domain action schema for: Load, Unload, and Fly
-        # concrete actions definition: specific literal action that does not include variables as with the schema
-        # for example, the action schema 'Load(c, p, a)' can represent the concrete actions 'Load(C1, P1, SFO)'
-        # or 'Load(C2, P2, JFK)'.  The actions for the planning problem must be concrete because the problems in
+        # Created concrete Action objects based on the domain action schema for:
+        #Load, Unload, and Fly
+        # concrete actions definition: specific literal action that does not
+        #include variables as with the schema
+        # for example, the action schema 'Load(c, p, a)' can represent the
+        #concrete actions 'Load(C1, P1, SFO)'
+        # or 'Load(C2, P2, JFK)'.  The actions for the planning problem must be
+        #concrete because the problems in
         # forward search and Planning Graphs must use Propositional Logic
 
         def load_actions():
@@ -60,7 +65,7 @@ class AirCargoProblem(Problem):
             :return: list of Action objects
             """
             loads = []
-           
+
             for a in self.airports:
                 for c in self.cargos:
                     for p in self.planes:
@@ -70,8 +75,8 @@ class AirCargoProblem(Problem):
                         effect_rem = [expr("At({}, {})".format(c,a))]
                         load = Action(expr("Load({}, {}, {})".format(c, p, a)),[precond_pos, precond_neg], [effect_add, effect_rem])
                         loads.append(load)
-           
-            # TODO create all load ground actions from the domain Load action
+
+            # Created all load ground actions from the domain Load action
             return loads
 
         def unload_actions():
@@ -122,7 +127,6 @@ class AirCargoProblem(Problem):
             e.g. 'FTTTFF'
         :return: list of Action objects
         """
-        # TODO implement
         possible_actions = []
         kb = PropKB()
         kb.tell(decode_state(state, self.state_map).pos_sentence())
@@ -148,7 +152,6 @@ class AirCargoProblem(Problem):
         :param action: Action applied
         :return: resulting state after action
         """
-        # TODO implement
         new_state = FluentState([], [])
         old_state = decode_state(state, self.state_map)
         for fluent in old_state.pos:
@@ -208,7 +211,7 @@ class AirCargoProblem(Problem):
         for clause in self.goal:
             if clause not in kb.clauses:
                 count += 1
-            
+
         # TODO implement (see Russell-Norvig Ed-3 10.2.3  or Russell-Norvig Ed-2 11.2)
         return count
 
@@ -324,5 +327,3 @@ def air_cargo_p3() -> AirCargoProblem:
             expr('At(C4, SFO)'),
             ]
     return AirCargoProblem(cargos, planes, airports, init, goal)
-
-#air_cargo_p1()
